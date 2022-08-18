@@ -24,7 +24,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCSTR lpszCm
 
 	// 윈도우 클래스를 운영체제에 등록 : 앞으로 이런 스타일의 윈도우창을 생성할 것이다.
 	RegisterClass(&wndClass);
-	
+
+	HWND hWnd;
+	MSG Message;
+	g_hInst = hInstance; // 글로벌 전역변수에 넣어준다.
+
+	// 윈도우즈 생성
+	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPED,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		NULL, NULL, hInstance, NULL);
+	// 윈도우즈 출력
+	ShowWindow(hWnd, nCmdShow);
+
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
