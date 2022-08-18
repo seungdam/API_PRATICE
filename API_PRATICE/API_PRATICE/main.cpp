@@ -36,6 +36,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCSTR lpszCm
 	// 윈도우즈 출력
 	ShowWindow(hWnd, nCmdShow);
 
+	// 메세지 루프
+	while (GetMessage(&Message, NULL, 0, 0) > 0) {
+		TranslateMessage(&Message); // 키보드 입력을 응용프로그램이 쉽게 이해하게 번역
+		DispatchMessage(&Message); // 발생한 메세지를 프로세스로 전달
+	}
+
+	return Message.wParam;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
