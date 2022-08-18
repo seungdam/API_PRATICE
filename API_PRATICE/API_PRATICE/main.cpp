@@ -21,6 +21,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCSTR lpszCm
 	wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndClass.lpszMenuName = NULL;
 	wndClass.style = CS_HREDRAW | CS_VREDRAW;
+
+	// 윈도우 클래스를 운영체제에 등록 : 앞으로 이런 스타일의 윈도우창을 생성할 것이다.
+	RegisterClass(&wndClass);
+	
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
