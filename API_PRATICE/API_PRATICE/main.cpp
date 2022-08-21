@@ -5,7 +5,7 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst; // 응용프로그램 핸들을 저장하기 위해 전역변수로 선언
-LPCTSTR lpszClass = TEXT("KeyBoard_Action"); // 클래스 명을 저장하기 위한 문자열 
+LPCTSTR lpszClass = TEXT("WinApiStart"); // 클래스 명을 저장하기 위한 문자열 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 
