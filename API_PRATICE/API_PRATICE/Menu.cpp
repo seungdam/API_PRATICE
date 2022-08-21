@@ -54,6 +54,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	switch (iMessage) {
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) { // 각 메뉴에 대한 부가 처리정보는 LOWORD(wParam)에 있다. 
+		case ID_MENU_MENU1:
+			MessageBox(hWnd, L"Menu1 입니다.", L"Menu1", MB_OK);
+			break;
+		case ID_MENU_MENU2:
+			MessageBox(hWnd, L"Menu2 입니다.", L"Menu2", MB_OK);
+			break;
+		case ID_MENU_EXIT:
+			DestroyWindow(hWnd);
+			break;
+		}
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
