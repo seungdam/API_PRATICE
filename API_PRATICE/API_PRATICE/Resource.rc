@@ -60,6 +60,19 @@ BEGIN
     END
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR1 ACCELERATORS
+BEGIN
+    "1",            ID_MENU_MENU1,          VIRTKEY, CONTROL, NOINVERT
+    "2",            ID_MENU_MENU2,          VIRTKEY, CONTROL, NOINVERT
+    "E",            ID_MENU_EXIT,           VIRTKEY, CONTROL, NOINVERT
+END
+
 #endif    // 한국어(대한민국) resources
 /////////////////////////////////////////////////////////////////////////////
 
