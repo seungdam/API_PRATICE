@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
+#include "resource.h"
 
 // ****운영체제가 메세지 발생 시 호출하는 함수 (callback 함수)
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -19,7 +20,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wndClass.hInstance = hInstance;
 	wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	wndClass.lpszMenuName = NULL;
+	wndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
 	wndClass.style = CS_HREDRAW | CS_VREDRAW;
 
 	// 윈도우 클래스를 운영체제에 등록 : 앞으로 이런 스타일의 윈도우창을 생성할 것이다.
