@@ -36,11 +36,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		NULL, NULL, hInstance, NULL);
 	// 윈도우즈 출력
 	ShowWindow(hWnd, nCmdShow);
+	
+	// 액셀러레이터 핸들
+	HACCEL hAccel;
+	hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR1));
 
 	// 메세지 루프
 	while (GetMessage(&Message, NULL, 0, 0) > 0) {
-		TranslateMessage(&Message); // 키보드 입력을 응용프로그램이 쉽게 이해하게 번역
-		DispatchMessage(&Message); // 발생한 메세지를 프로세스로 전달
+		if (!TranslateAccelerator(hWnd, hAccel, &Message)) { // 만약 들어온 키입력이 핫키(Accelerator)가 아니라면.. 
+			TranslateMessage(&Message); // 키보드 입력을 응용프로그램이 쉽게 이해하게 번역
+			DispatchMessage(&Message); // 발생한 메세지를 프로세스로 전달
+		}
 	}
 
 	return Message.wParam;
