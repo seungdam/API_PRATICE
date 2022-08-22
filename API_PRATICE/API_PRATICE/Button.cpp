@@ -3,7 +3,7 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst;
-LPCTSTR lpszClass = TEXT("Button");
+LPCTSTR lpszClass = TEXT("MyButton");
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;   // 윈도우 핸들
@@ -45,6 +45,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	switch (iMessage) {
 	case WM_CREATE:
+		CreateWindow(L"button", L"Reset", WS_CHILD | WS_VISIBLE
+			| BS_PUSHBUTTON, 10, 10, 100, 50, hWnd, (HMENU)0, g_hInst, NULL);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
