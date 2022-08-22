@@ -6,9 +6,11 @@ HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("WinApiStart");
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
-	HWND hWnd;
-	MSG Message;
-	g_hInst = hInstance;
+	HWND hWnd;   // 윈도우 핸들
+	MSG Message; // 메세지
+	g_hInst = hInstance; // 인스턴스 핸들을 다른 프로세스에서도 사용할 수 있도록 전역변수에 대입
+
+	// 윈도우 클래스(윈도우의 속성을 정의하는 구조체)를 초기화
 	WNDCLASS wc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
@@ -20,17 +22,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	wc.lpfnWndProc = WndProc;
 	wc.lpszMenuName = NULL;
 	wc.style = CS_VREDRAW | CS_HREDRAW;
-	RegisterClass(&wc);
+	RegisterClass(&wc); // 초기화 시킨 윈도우 클래스를 운영체제에 등록
 
+	// 윈도우 클래스 바탕으로 윈도우창을 생성한다
 	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT
 		, NULL, NULL, hInstance, NULL);
-	ShowWindow(hWnd, nCmdShow);
+	ShowWindow(hWnd, nCmdShow); // 윈도우창을 출력
 	if (hWnd == NULL) return -1;
 
-	while (GetMessage(&Message, hWnd, 0, 0) > 0) {
-		TranslateMessage(&Message);
-		DispatchMessage(&Message);
+	// 메세지 루프
+	while (GetMessage(&Message, hWnd, 0, 0) > 0) { // 메세지 큐에 있는 메세지들을 확인
+		TranslateMessage(&Message); // 키보드에 입력된 메세지를 인스턴스가 이해하기 쉬운 형태로 해석
+		DispatchMessage(&Message); // WndProc으로 해석시킨 메세지를 전달한다.
 	}
 
 	return (int)Message.wParam;
