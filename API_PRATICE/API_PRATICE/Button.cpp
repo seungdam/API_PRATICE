@@ -34,7 +34,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	if (hWnd == NULL) return -1;
 
 	// 메세지 루프
-	while (GetMessage(&Message, hWnd, 0, 0) > 0) { // 메세지 큐에 있는 메세지들을 확인
+	while (GetMessage(&Message, NULL, 0, 0) > 0) { // 메세지 큐에 있는 메세지들을 확인
 		TranslateMessage(&Message); // 키보드에 입력된 메세지를 인스턴스가 이해하기 쉬운 형태로 해석
 		DispatchMessage(&Message); // WndProc으로 해석시킨 메세지를 전달한다.
 	}
