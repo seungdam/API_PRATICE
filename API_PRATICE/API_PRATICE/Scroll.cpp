@@ -43,8 +43,21 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static HWND hr, hg, hb;
 	switch (iMessage) {
 	case WM_CREATE:
+		hr = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
+			| SBS_HORZ, 10, 10, 400, 20, hWnd, (HMENU)0, g_hInst, NULL);
+		hg = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
+			| SBS_HORZ, 10, 40, 400, 20, hWnd, (HMENU)0, g_hInst, NULL);
+		hb = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
+			| SBS_HORZ, 10, 70, 400, 20, hWnd, (HMENU)0, g_hInst, NULL);
+		SetScrollRange(hr, SB_CTL, 0, 255, TRUE); // 스크롤의 범위를 설정
+		SetScrollPos(hr, SB_CTL, 0, TRUE); // 스크롤 바의 위치를 결정
+		SetScrollRange(hg, SB_CTL, 0, 255, TRUE);
+		SetScrollPos(hg, SB_CTL, 0, TRUE);
+		SetScrollRange(hb, SB_CTL, 0, 255, TRUE);
+		SetScrollPos(hb, SB_CTL, 0, TRUE);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
