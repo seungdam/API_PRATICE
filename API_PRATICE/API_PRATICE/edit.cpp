@@ -44,11 +44,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	PAINTSTRUCT ps;
 	static HWND edit;
+	static TCHAR str[256];
 	switch (iMessage) {
 	case WM_CREATE:
 		edit = CreateWindow(TEXT("edit"), NULL, WS_CHILD | WS_VISIBLE
 			| ES_AUTOHSCROLL |ES_AUTOVSCROLL, 10, 10, 200, 25, hWnd, (HMENU)0, g_hInst, NULL);
 		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+		case 0:
+			switch (HIWORD(wParam)) {
+			case EN_CHANGE:
+				GetWindowText(edit, str, 256);
+				SetWindowText(hWnd, str);
+				break;
+			}
+			break;
+		}
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
