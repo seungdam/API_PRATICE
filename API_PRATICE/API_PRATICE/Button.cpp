@@ -5,6 +5,8 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("MyButton");
 
+enum BTN {B1 = 1000,C1,C2,C3,R1,R2,R3};
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;   // 윈도우 핸들
 	MSG Message; // 메세지
@@ -46,7 +48,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage) {
 	case WM_CREATE:
 		CreateWindow(L"button", L"Reset", WS_CHILD | WS_VISIBLE
-			| BS_PUSHBUTTON, 10, 10, 100, 50, hWnd, (HMENU)0, g_hInst, NULL);
+			| BS_PUSHBUTTON, 160, 50, 50, 50, hWnd, (HMENU)B1, g_hInst, NULL);
+		// 색깔 설정
+
+		// 마우스 굵기 설정
+		CreateWindow(L"button", L"Width", WS_CHILD | WS_VISIBLE
+			| BS_GROUPBOX, 10, 20, 60, 120, hWnd, (HMENU)0, g_hInst, NULL);
+		CreateWindow(L"button", L"5", WS_CHILD | WS_VISIBLE
+			| BS_AUTOCHECKBOX, 20, 40, 30, 30, hWnd, (HMENU)C1, g_hInst, NULL);
+		CreateWindow(L"button", L"7", WS_CHILD | WS_VISIBLE
+			| BS_AUTOCHECKBOX, 20, 70, 30, 30, hWnd, (HMENU)C2, g_hInst, NULL);
+		CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
+			| BS_AUTOCHECKBOX, 20, 100, 30, 30, hWnd, (HMENU)C3, g_hInst, NULL);
+
+		CreateWindow(L"button", L"Color", WS_CHILD | WS_VISIBLE
+			| BS_GROUPBOX, 100, 20, 50, 120, hWnd, (HMENU)1, g_hInst, NULL);
+		CreateWindow(L"button", L"5", WS_CHILD | WS_VISIBLE
+			| BS_AUTORADIOBUTTON, 110, 40, 30, 30, hWnd, (HMENU)R1, g_hInst, NULL);
+		CreateWindow(L"button", L"7", WS_CHILD | WS_VISIBLE
+			| BS_AUTORADIOBUTTON, 110, 70, 30, 30, hWnd, (HMENU)R2, g_hInst, NULL);
+		CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
+			| BS_AUTORADIOBUTTON, 110, 100, 30, 30, hWnd, (HMENU)R3, g_hInst, NULL);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
