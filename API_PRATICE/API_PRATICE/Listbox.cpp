@@ -47,6 +47,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	PAINTSTRUCT ps;
 	static HWND hLstbx;
+	static TCHAR str[256];
 	switch (iMessage) {
 	case WM_CREATE:
 		// NOTIFY : 사용자가 목록 중 하나를 선택했을 때 통지 메시지(HIWORD(wParam))를 전송
@@ -56,6 +57,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			SendMessage(hLstbx, LB_ADDSTRING, 0, (LPARAM)i);
 		}
 		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) { // 선택된 컨트롤에 대한 처리
+		case 0:
+			switch (HIWORD(wParam)) { // 리스트 박스의 통지 메시지
+			case LBN_SELCHANGE: // 사용자에 의해 선택이 변경된 경우.
+				int idx = SendMessage(hLstbx, LB_GETCURSEL, 0, 0); // 선택된 인덱스 값을 반환
+				SendMessage(hLstbx, LB_GETTEXT, idx, (LPARAM)str); // 해당 인덱스의 텍스트값을 문자배열에 저장
+				SetWindowText(hWnd, str);
+				break;
+			}
+			break;
+		}
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
