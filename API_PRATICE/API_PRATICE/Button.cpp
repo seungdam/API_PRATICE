@@ -45,6 +45,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static bool bNowDw = FALSE;
+	static int px, py;
 	switch (iMessage) {
 	case WM_CREATE:
 		CreateWindow(L"button", L"Reset", WS_CHILD | WS_VISIBLE
@@ -69,6 +71,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			| BS_AUTORADIOBUTTON, 110, 70, 30, 30, hWnd, (HMENU)R2, g_hInst, NULL);
 		CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
 			| BS_AUTORADIOBUTTON, 110, 100, 30, 30, hWnd, (HMENU)R3, g_hInst, NULL);
+		break;
+	case WM_LBUTTONDOWN:
+		px = LOWORD(lParam);
+		py = HIWORD(lParam);
+		bNowDw = TRUE;
+		break;
+	case WM_MOUSEMOVE:
+		if (bNowDw) {
+			hdc = GetDC(hWnd);
+			MoveToEx(hdc,px,py,NULL);
+			px = LOWORD(lParam);
+			py = HIWORD(lParam);
+			LineTo(hdc, px, py);
+			ReleaseDC(hWnd,hdc);
+		}
+		break;
+	case WM_LBUTTONUP:
+		bNowDw = FALSE;
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
