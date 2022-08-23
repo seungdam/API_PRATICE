@@ -46,6 +46,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	static int r, g, b;
 	static int tempPos = 0;
 	static HWND hr, hg, hb;
+	RECT rt{ 10,100,410,300 };
+	HBRUSH ob, mb;
 	switch (iMessage) {
 	case WM_CREATE:
 		hr = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
@@ -89,10 +91,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		if ((HWND)lParam == hg) g = tempPos;
 		if ((HWND)lParam == hb) b = tempPos;
 		SetScrollPos((HWND)lParam, SB_CTL, tempPos, TRUE);
-		InvalidateRect(hWnd, NULL, TRUE);
+		InvalidateRect(hWnd,&rt, TRUE);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
+		mb = CreateSolidBrush(RGB(r,g,b));
+		ob = (HBRUSH)SelectObject(hdc, mb);
+		Rectangle(hdc, 10, 100, 410, 300);
+		SelectObject(hdc, ob);
+		DeleteObject(mb);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
