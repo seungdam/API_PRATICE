@@ -43,21 +43,53 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static int r, g, b;
+	static int tempPos = 0;
 	static HWND hr, hg, hb;
 	switch (iMessage) {
 	case WM_CREATE:
 		hr = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
 			| SBS_HORZ, 10, 10, 400, 20, hWnd, (HMENU)0, g_hInst, NULL);
 		hg = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
-			| SBS_HORZ, 10, 40, 400, 20, hWnd, (HMENU)0, g_hInst, NULL);
+			| SBS_HORZ, 10, 40, 400, 20, hWnd, (HMENU)1, g_hInst, NULL);
 		hb = CreateWindow(TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE
-			| SBS_HORZ, 10, 70, 400, 20, hWnd, (HMENU)0, g_hInst, NULL);
-		SetScrollRange(hr, SB_CTL, 0, 255, TRUE); // 스크롤의 범위를 설정
+			| SBS_HORZ, 10, 70, 400, 20, hWnd, (HMENU)2, g_hInst, NULL);
+		SetScrollRange(hr, SB_CTL, 0, 255, TRUE); // 스크롤의 범위를 설정 SB_CTL :  기본 스크롤 바
 		SetScrollPos(hr, SB_CTL, 0, TRUE); // 스크롤 바의 위치를 결정
 		SetScrollRange(hg, SB_CTL, 0, 255, TRUE);
 		SetScrollPos(hg, SB_CTL, 0, TRUE);
 		SetScrollRange(hb, SB_CTL, 0, 255, TRUE);
 		SetScrollPos(hb, SB_CTL, 0, TRUE);
+		break;
+	case WM_HSCROLL: // 수평 스크롤에 대한 처리
+		// lParam : 현재 선택된 스크롤 핸들
+		if ((HWND)lParam == hr) tempPos = r;
+		if ((HWND)lParam == hg) tempPos = g;
+		if ((HWND)lParam == hb) tempPos = b;
+
+		switch (LOWORD(wParam)) {
+		case SB_LINELEFT: // 스크롤 왼쪽 화살표 버튼을 누를 경우
+			tempPos = max(0, tempPos - 1);
+			break;
+		case SB_LINERIGHT: // 오른쪽 화살표 버튼
+			tempPos = min(255, tempPos + 1);
+			break;
+		case SB_PAGELEFT: // 스크롤바의 왼쪽 몸통을 누른 경우
+			tempPos = max(0, tempPos - 1);
+			break;
+		case SB_PAGERIGHT: // 오른쪽 몸통을 누른 경우
+			tempPos = min(255, tempPos + 1);
+			break;
+		case SB_THUMBTRACK: // 사용자가 바를 드래그 하고 있는 경우
+			tempPos = HIWORD(wParam); // 스크롤 바의 위치.
+			break;
+		}
+		
+		if ((HWND)lParam == hr) r = tempPos;
+		if ((HWND)lParam == hg) g = tempPos;
+		if ((HWND)lParam == hb) b = tempPos;
+		SetScrollPos((HWND)lParam, SB_CTL, tempPos, TRUE);
+		InvalidateRect(hWnd, NULL, TRUE);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
