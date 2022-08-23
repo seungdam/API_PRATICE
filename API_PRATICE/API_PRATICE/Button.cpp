@@ -47,6 +47,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	static bool bNowDw = FALSE;
 	static int px, py;
+	static COLORREF color = RGB(255,255,255);
+	static int width = 1;
+	static HWND c1, c2, c3;
 	switch (iMessage) {
 	case WM_CREATE:
 		CreateWindow(L"button", L"Reset", WS_CHILD | WS_VISIBLE
@@ -56,20 +59,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		// 마우스 굵기 설정
 		CreateWindow(L"button", L"Width", WS_CHILD | WS_VISIBLE
 			| BS_GROUPBOX, 10, 20, 60, 120, hWnd, (HMENU)0, g_hInst, NULL);
-		CreateWindow(L"button", L"5", WS_CHILD | WS_VISIBLE
+		c1 = CreateWindow(L"button", L"5", WS_CHILD | WS_VISIBLE
 			| BS_AUTOCHECKBOX, 20, 40, 30, 30, hWnd, (HMENU)C1, g_hInst, NULL);
-		CreateWindow(L"button", L"7", WS_CHILD | WS_VISIBLE
+		c2 = CreateWindow(L"button", L"7", WS_CHILD | WS_VISIBLE
 			| BS_AUTOCHECKBOX, 20, 70, 30, 30, hWnd, (HMENU)C2, g_hInst, NULL);
-		CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
+		c3 = CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
 			| BS_AUTOCHECKBOX, 20, 100, 30, 30, hWnd, (HMENU)C3, g_hInst, NULL);
 
 		CreateWindow(L"button", L"Color", WS_CHILD | WS_VISIBLE
 			| BS_GROUPBOX, 100, 20, 50, 120, hWnd, (HMENU)1, g_hInst, NULL);
-		CreateWindow(L"button", L"5", WS_CHILD | WS_VISIBLE
-			| BS_AUTORADIOBUTTON, 110, 40, 30, 30, hWnd, (HMENU)R1, g_hInst, NULL);
-		CreateWindow(L"button", L"7", WS_CHILD | WS_VISIBLE
+		CreateWindow(L"button", L"R", WS_CHILD | WS_VISIBLE
+			| BS_AUTORADIOBUTTON | WS_GROUP, 110, 40, 30, 30, hWnd, (HMENU)R1, g_hInst, NULL);
+		CreateWindow(L"button", L"G", WS_CHILD | WS_VISIBLE
 			| BS_AUTORADIOBUTTON, 110, 70, 30, 30, hWnd, (HMENU)R2, g_hInst, NULL);
-		CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
+		CreateWindow(L"button", L"B", WS_CHILD | WS_VISIBLE
 			| BS_AUTORADIOBUTTON, 110, 100, 30, 30, hWnd, (HMENU)R3, g_hInst, NULL);
 		break;
 	case WM_LBUTTONDOWN:
@@ -89,6 +92,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_LBUTTONUP:
 		bNowDw = FALSE;
+		break;
+	case WM_COMMAND:
+		switch (wParam) {
+		case B1:
+			InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		case R1:
+			color = RGB(255, 0, 0);
+			break;
+		case R2:
+			color = RGB(0, 255, 0);
+			break;
+		case R3:
+			color = RGB(0, 0, 255);
+			break;
+		case C1:
+			if (SendMessage(c2, BM_GETCHECK, 0, 0) == BST_CHECKED) SendMessage(c2, BM_SETCHECK, BST_UNCHECKED, 0);
+			if (SendMessage(c3, BM_GETCHECK, 0, 0) == BST_CHECKED) SendMessage(c3, BM_SETCHECK, BST_UNCHECKED, 0);
+			width = 5;
+			break;
+		case C2:
+			if (SendMessage(c1, BM_GETCHECK, 0, 0) == BST_CHECKED) SendMessage(c1, BM_SETCHECK, BST_UNCHECKED, 0);
+			if (SendMessage(c3, BM_GETCHECK, 0, 0) == BST_CHECKED) SendMessage(c3, BM_SETCHECK, BST_UNCHECKED, 0);
+			width = 7;
+			break;
+		case C3:
+			if (SendMessage(c1, BM_GETCHECK, 0, 0) == BST_CHECKED) SendMessage(c1, BM_SETCHECK, BST_UNCHECKED, 0);
+			if (SendMessage(c2, BM_GETCHECK, 0, 0) == BST_CHECKED) SendMessage(c2, BM_SETCHECK, BST_UNCHECKED, 0);
+			width = 9;
+			break;
+		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
