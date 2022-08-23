@@ -1,5 +1,4 @@
 #include <windows.h>
-
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst;
@@ -9,7 +8,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	HWND hWnd;   // 윈도우 핸들
 	MSG Message; // 메세지
 	g_hInst = hInstance; // 인스턴스 핸들을 다른 프로세스에서도 사용할 수 있도록 전역변수에 대입
-
+	
 	// 윈도우 클래스(윈도우의 속성을 정의하는 구조체)를 초기화
 	WNDCLASS wc;
 	wc.cbClsExtra = 0;
@@ -41,20 +40,39 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 }
 
 const TCHAR* items[] = { TEXT("oh sd"), TEXT("lee hj"), TEXT("beak jh") };
-
+HWND hCmb;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static HWND hCmb;
+	int idx = 0;
+	static TCHAR str[128];
 	switch (iMessage) {
 	case WM_CREATE:
 		//CBS_SIMPLE: 에디트와 리스트박스를 가지되 리스트 박스가 항상 펼처있음.
 		//CBS_DROPDOWN: 에디트와 리스트박스를 가짐
 		//CBS_DROPDOWNLIST: 리스트박스만 가지며 에디트에 항목을 입력할 수는 없다.
 		hCmb = CreateWindow(TEXT("combobox"), NULL, WS_CHILD | WS_VISIBLE |
-			CBS_DROPDOWN, 10, 10, 100, 200, hWnd, (HMENU)0, g_hInst, NULL);
-		for (auto i : items)
-			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)i);
+			CBS_DROPDOWN, 10, 10, 100, 200, hWnd, (HMENU)2310, g_hInst, NULL);
+		for (auto i : items) {
+			SendMessage(hCmb, CB_ADDSTRING, 0, (LPARAM)i);
+		}
+		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+		case 2310:
+			switch (HIWORD(wParam)) {
+			case CBN_SELCHANGE:
+				idx = SendMessage(hCmb, CB_GETCURSEL, 0, 0);
+				SendMessage(hCmb, CB_GETLBTEXT, idx, (LPARAM)str);
+				SetWindowText(hWnd, str);
+				break;
+			case CBN_EDITCHANGE:
+				GetWindowText(hCmb, str, 128);
+				SetWindowText(hWnd, str);
+				break;
+			}
+			break;
+		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
