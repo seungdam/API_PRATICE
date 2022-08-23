@@ -40,6 +40,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
+const TCHAR* items[] = { TEXT("oh sd"), TEXT("lee hj"), TEXT("beak jh") };
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
@@ -51,6 +53,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		//CBS_DROPDOWNLIST: 리스트박스만 가지며 에디트에 항목을 입력할 수는 없다.
 		hCmb = CreateWindow(TEXT("combobox"), NULL, WS_CHILD | WS_VISIBLE |
 			CBS_DROPDOWN, 10, 10, 100, 200, hWnd, (HMENU)0, g_hInst, NULL);
+		for (auto i : items)
+			SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)i);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
