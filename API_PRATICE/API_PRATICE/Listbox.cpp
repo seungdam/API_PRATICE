@@ -1,9 +1,9 @@
 #include <windows.h>
-
+#include <vector>
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst;
-LPCTSTR lpszClass = TEXT("WinApiStart");
+LPCTSTR lpszClass = TEXT("MyListBox");
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;   // 윈도우 핸들
@@ -40,11 +40,21 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
+const TCHAR* items[]= { TEXT("oh sd"),TEXT("lee hj"), TEXT("baek jh")};
+
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static HWND hLstbx;
 	switch (iMessage) {
 	case WM_CREATE:
+		// NOTIFY : 사용자가 목록 중 하나를 선택했을 때 통지 메시지(HIWORD(wParam))를 전송
+		hLstbx = CreateWindow(TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER 
+			| LBS_NOTIFY, 10, 10, 100, 200, hWnd, (HMENU)0, g_hInst, NULL);
+		for (auto i : items) {
+			SendMessage(hLstbx, LB_ADDSTRING, 0, (LPARAM)i);
+		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
