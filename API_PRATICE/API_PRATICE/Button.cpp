@@ -50,6 +50,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	static COLORREF color = RGB(255,255,255);
 	static int width = 1;
 	static HWND c1, c2, c3;
+	static HPEN op, mp;
 	switch (iMessage) {
 	case WM_CREATE:
 		CreateWindow(L"button", L"Reset", WS_CHILD | WS_VISIBLE
@@ -60,9 +61,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		CreateWindow(L"button", L"Width", WS_CHILD | WS_VISIBLE
 			| BS_GROUPBOX, 10, 20, 60, 120, hWnd, (HMENU)0, g_hInst, NULL);
 		c1 = CreateWindow(L"button", L"5", WS_CHILD | WS_VISIBLE
-			| BS_AUTOCHECKBOX, 20, 40, 30, 30, hWnd, (HMENU)C1, g_hInst, NULL);
+		| BS_AUTOCHECKBOX, 20, 40, 30, 30, hWnd, (HMENU)C1, g_hInst, NULL);
 		c2 = CreateWindow(L"button", L"7", WS_CHILD | WS_VISIBLE
-			| BS_AUTOCHECKBOX, 20, 70, 30, 30, hWnd, (HMENU)C2, g_hInst, NULL);
+		| BS_AUTOCHECKBOX, 20, 70, 30, 30, hWnd, (HMENU)C2, g_hInst, NULL);
 		c3 = CreateWindow(L"button", L"9", WS_CHILD | WS_VISIBLE
 			| BS_AUTOCHECKBOX, 20, 100, 30, 30, hWnd, (HMENU)C3, g_hInst, NULL);
 
@@ -83,10 +84,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		if (bNowDw) {
 			hdc = GetDC(hWnd);
+			mp = CreatePen(PS_DOT, width, color);
+			op = (HPEN)SelectObject(hdc, mp);
 			MoveToEx(hdc,px,py,NULL);
 			px = LOWORD(lParam);
 			py = HIWORD(lParam);
 			LineTo(hdc, px, py);
+			SelectObject(hdc, op);
+			DeleteObject(mp);
 			ReleaseDC(hWnd,hdc);
 		}
 		break;
