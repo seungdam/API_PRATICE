@@ -1,9 +1,11 @@
 #include <windows.h>
+#include "resource.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("WinApiStart");
+
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;   // 윈도우 핸들
@@ -38,6 +40,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	}
 
 	return (int)Message.wParam;
+}
+
+// 다이얼로그에 대한 콜백 함수를 ㅈ가성.
+BOOL CALLBACK AboutDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	switch (iMessage) {
+	case WM_INITDIALOG:
+		return true;
+	case WM_COMMAND:
+		break;
+	}
+	return false;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
