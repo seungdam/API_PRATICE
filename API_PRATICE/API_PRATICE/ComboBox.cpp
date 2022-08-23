@@ -43,8 +43,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static HWND hCmb;
 	switch (iMessage) {
 	case WM_CREATE:
+		//CBS_SIMPLE: 에디트와 리스트박스를 가지되 리스트 박스가 항상 펼처있음.
+		//CBS_DROPDOWN: 에디트와 리스트박스를 가짐
+		//CBS_DROPDOWNLIST: 리스트박스만 가지며 에디트에 항목을 입력할 수는 없다.
+		hCmb = CreateWindow(TEXT("combobox"), NULL, WS_CHILD | WS_VISIBLE |
+			CBS_DROPDOWN, 10, 10, 100, 200, hWnd, (HMENU)0, g_hInst, NULL);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
