@@ -27,6 +27,9 @@
     <ClCompile Include="edit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Listbox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
