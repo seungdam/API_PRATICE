@@ -42,15 +42,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
-// 다이얼로그에 대한 콜백 함수를 ㅈ가성.
-BOOL CALLBACK AboutDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+// 다이얼로그에 대한 콜백 함수를 작성.
+LRESULT CALLBACK AboutDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	switch (iMessage) {
 	case WM_INITDIALOG:
-		return true;
+		return TRUE;
 	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+		case IDOK:
+			EndDialog(hDlg, IDOK);
+			break;
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+		}
 		break;
 	}
-	return false;
+	return FALSE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
@@ -58,6 +66,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	switch (iMessage) {
 	case WM_CREATE:
+		break;
+	case WM_LBUTTONDOWN:
+		DialogBox(g_hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, AboutDlgProc); // WndProc에서 대화상자를 호출
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
