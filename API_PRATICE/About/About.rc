@@ -89,7 +89,7 @@ BEGIN
     EDITTEXT        IDC_PW,213,57,73,16,ES_AUTOHSCROLL
     CTEXT           "ID",IDC_STATIC,199,35,8,8
     CTEXT           "PW",IDC_STATIC,197,60,12,8
-    CONTROL         "Game Engineer",IDC_GE,"Button",BS_AUTORADIOBUTTON,84,39,64,10
+    CONTROL         "Game Engineer",IDC_GE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,84,39,64,10
     CONTROL         "Design",IDC_DS,"Button",BS_AUTORADIOBUTTON,84,66,37,10
     CONTROL         "Computer Engineer",IDC_CE,"Button",BS_AUTORADIOBUTTON,84,52,77,10
     CONTROL         "Eletronic",IDC_ET,"Button",BS_AUTORADIOBUTTON,84,80,43,10
