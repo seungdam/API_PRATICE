@@ -2,6 +2,7 @@
 #include "resource.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+BOOL    CALLBACK MainDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("WinApiStart");
@@ -40,6 +41,26 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	}
 
 	return (int)Message.wParam;
+}
+
+BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	switch (iMessage) {
+	case WM_INITDIALOG: // 다이얼로그 초기화 부분
+		return TRUE;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {  // 컨트롤에 대한 처리
+		case IDOK:
+			MessageBox(hDlg, TEXT("Hellow"), TEXT("안녕"), MB_OK);
+			return TRUE; // 메세지를 제대로 처리했다면 참 아니면 거짓을 반환.
+		case IDCANCEL:
+			EndDialog(hDlg, IDOK);
+			return TRUE;
+		}
+		break;
+	}
+	
+
+	return FALSE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
