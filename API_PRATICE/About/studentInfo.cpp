@@ -7,6 +7,12 @@ BOOL    CALLBACK MainDlgProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("studentInfo");
 
+struct STDINFO {
+	bool sex;
+	TCHAR major[128];
+	TCHAR id[50];
+	TCHAR pw[50];
+};
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), NULL, (DLGPROC)MainDlgProc); // 윈도우 생성 없이 바로 다이얼로그 출력
