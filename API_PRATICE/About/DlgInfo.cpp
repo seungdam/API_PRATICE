@@ -4,6 +4,7 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE g_hInst;
+HWND hMainWnd;
 LPCTSTR lpszClass = TEXT("DlgInfo");
 
 
@@ -32,6 +33,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		, NULL, NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow); // 윈도우창을 출력
 	if (hWnd == NULL) return -1;
+	hMainWnd = hWnd;
 
 	// 메세지 루프
 	while (GetMessage(&Message, NULL, 0, 0) > 0) { // 메세지 큐에 있는 메세지들을 확인
@@ -49,15 +51,21 @@ TCHAR str[256];
 BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	switch (iMessage) {
 	case WM_INITDIALOG:
+		SetDlgItemInt(hDlg, IDC_X, 0, FALSE);
+		SetDlgItemInt(hDlg, IDC_Y, 0, FALSE);
+		SetDlgItemText(hDlg, IDC_STR, TEXT("Put String Here"));
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {
 		case IDOK:
+			posX = GetDlgItemInt(hDlg, IDC_X,NULL , FALSE);
+			posY = GetDlgItemInt(hDlg, IDC_Y, NULL, FALSE);
+			GetDlgItemText(hDlg,IDC_STR,str,256);
 			EndDialog(hDlg, IDOK);
-			break;
+			return TRUE;
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
-			break;
+			return TRUE;
 		}
 		break;
 	}
@@ -78,7 +86,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		SetBkMode(hdc, TRANSPARENT);
+		SetBkMode(hdc,TRANSPARENT);
 		TextOut(hdc, posX, posY, str, lstrlen(str));
 		EndPaint(hWnd, &ps);
 		break;
