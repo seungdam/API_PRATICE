@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <vector>
 #include "resource.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -49,6 +50,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
+
+STDINFO student;
 BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	switch (iMessage) {
 	case WM_INITDIALOG: // 다이얼로그 초기화 부분
@@ -57,11 +60,26 @@ BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {  // 컨트롤에 대한 처리
+		case IDC_M:
+			SendDlgItemMessage(hDlg, IDC_FM, BM_SETCHECK, BST_UNCHECKED, 0);
+			return TRUE;
+		case IDC_FM:
+			SendDlgItemMessage(hDlg, IDC_M, BM_SETCHECK, BST_UNCHECKED, 0);
+			return TRUE;
 		case IDOK:
-			MessageBox(hDlg, TEXT("Hellow"), TEXT("안녕"), MB_OK);
+			GetDlgItemText(hDlg, IDC_ID, student.id, 50);
+			GetDlgItemText(hDlg, IDC_PW, student.pw, 50);
+			if (IsDlgButtonChecked(hDlg, IDC_M)) student.sex = true;
+			else student.sex = false;
+			if (IsDlgButtonChecked(hDlg, IDC_GE)) lstrcpy(student.major,TEXT("게임공학"));
+			if (IsDlgButtonChecked(hDlg, IDC_CE)) lstrcpy(student.major, TEXT("컴퓨터공학"));
+			if (IsDlgButtonChecked(hDlg, IDC_DS)) lstrcpy(student.major, TEXT("디자인"));
+			if (IsDlgButtonChecked(hDlg, IDC_ET)) lstrcpy(student.major, TEXT("전기공학"));
+			MessageBox(hDlg, TEXT("Register"), TEXT("회원 가입 완료"), MB_OK);
+			EndDialog(hDlg, IDOK);
 			return TRUE; // 메세지를 제대로 처리했다면 참 아니면 거짓을 반환.
 		case IDCANCEL:
-			EndDialog(hDlg, IDOK);
+			EndDialog(hDlg, IDCANCEL);
 			return TRUE;
 		}
 		break;
