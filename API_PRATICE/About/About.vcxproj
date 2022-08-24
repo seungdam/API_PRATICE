@@ -139,7 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="About.cpp" />
+    <ClCompile Include="About.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DlgBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
