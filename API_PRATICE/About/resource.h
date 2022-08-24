@@ -5,8 +5,11 @@
 #define IDD_DIALOG1                     101
 #define IDD_DIALOG2                     103
 #define IDC_EDIT1                       1003
+#define IDC_X                           1003
 #define IDC_EDIT2                       1004
+#define IDC_Y                           1004
 #define IDC_EDIT3                       1005
+#define IDC_STR                         1005
 
 // Next default values for new objects
 // 
