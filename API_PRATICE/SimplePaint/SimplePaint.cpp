@@ -55,10 +55,10 @@ LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 	g_hDlg = hDlg;
 	switch (iMessage) {
 	case WM_INITDIALOG:
-		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLLBAR1), SB_CTL, 0, 255, TRUE);
-		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLLBAR2), SB_CTL, 0, 255, TRUE);
-		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLLBAR3), SB_CTL, 0, 255, TRUE);
-		SetDlgItemInt(hDlg, IDC_EDIT1, 0, TRUE);
+		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLL_RED), SB_CTL, 0, 255, TRUE);
+		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLL_GREEN), SB_CTL, 0, 255, TRUE);
+		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLL_BLUE), SB_CTL, 0, 255, TRUE);
+		SetDlgItemInt(hDlg, IDC_EDIT_WIDTH, 0, TRUE);
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {

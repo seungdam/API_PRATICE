@@ -3,11 +3,12 @@
 // Resource.rc에서 사용되고 있습니다.
 //
 #define IDD_DIALOG1                     101
-#define IDC_SCROLLBAR1                  1001
-#define IDC_SCROLLBAR2                  1002
-#define IDC_SCROLLBAR3                  1003
-#define IDC_EDIT1                       1004
-#define IDC_BUTTON1                     1005
+#define IDC_SCROLL_RED                  1001
+#define IDC_SCROLL_GREEN                1002
+#define IDC_SBLUE                       1003
+#define IDC_SCROLL_BLUE                 1003
+#define IDC_EDIT_WIDTH                  1004
+#define IDC_BTN_MODIFY                  1005
 
 // Next default values for new objects
 // 
