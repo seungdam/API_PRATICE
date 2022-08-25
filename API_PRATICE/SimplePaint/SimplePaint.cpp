@@ -53,12 +53,17 @@ HWND g_hDlg;
 
 LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	g_hDlg = hDlg;
+	static int r, g, b;
+	int tempPos;
 	switch (iMessage) {
 	case WM_INITDIALOG:
 		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLL_RED), SB_CTL, 0, 255, TRUE);
 		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLL_GREEN), SB_CTL, 0, 255, TRUE);
 		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLL_BLUE), SB_CTL, 0, 255, TRUE);
 		SetDlgItemInt(hDlg, IDC_EDIT_WIDTH, 0, TRUE);
+		SetScrollPos(GetDlgItem(hDlg, IDC_SCROLL_RED),SB_CTL,0,TRUE);
+		SetScrollPos(GetDlgItem(hDlg, IDC_SCROLL_GREEN), SB_CTL, 0, TRUE);
+		SetScrollPos(GetDlgItem(hDlg, IDC_SCROLL_BLUE), SB_CTL, 0, TRUE);
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {
@@ -66,6 +71,32 @@ LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 			EndDialog(hDlg, IDCANCEL);
 			return TRUE;
 		}
+		return TRUE;
+	case WM_HSCROLL:
+		if ((HWND)lParam == GetDlgItem(hDlg,IDC_SCROLL_RED)) tempPos = r;
+		if ((HWND)lParam == GetDlgItem(hDlg, IDC_SCROLL_GREEN)) tempPos = g;
+		if ((HWND)lParam == GetDlgItem(hDlg, IDC_SCROLL_BLUE)) tempPos = b;
+		switch (LOWORD(wParam)) {
+		case SB_LINERIGHT:
+			tempPos = max(0, tempPos + 1);
+			break;
+		case SB_PAGERIGHT:
+			tempPos = max(0, tempPos + 5);
+			break;
+		case SB_LINELEFT:
+			tempPos = min(255, tempPos - 1);
+			break;
+		case SB_PAGELEFT:
+			tempPos = min(255, tempPos - 5);
+			break;
+		case SB_THUMBTRACK:
+			tempPos = HIWORD(wParam);
+			break;
+		}
+		if((HWND)lParam == GetDlgItem(hDlg, IDC_SCROLL_RED)) r = tempPos;
+		if ((HWND)lParam == GetDlgItem(hDlg, IDC_SCROLL_GREEN)) g = tempPos;
+		if ((HWND)lParam == GetDlgItem(hDlg, IDC_SCROLL_BLUE)) b = tempPos;
+		SetScrollPos((HWND)lParam, SB_CTL, tempPos, TRUE);
 		return TRUE;
 	}
 	return FALSE;
