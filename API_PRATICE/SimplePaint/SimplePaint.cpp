@@ -43,8 +43,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static BOOL bNowDraw;
+	static int oldX, oldY, curX,curY;
 	switch (iMessage) {
 	case WM_CREATE:
+		break;
+	case WM_LBUTTONDOWN:
+		bNowDraw = TRUE;
+		oldX = LOWORD(lParam);
+		oldY = HIWORD(lParam);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
