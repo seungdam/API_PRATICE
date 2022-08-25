@@ -50,10 +50,10 @@ void DrawLine(HDC hdc, int& x, int& y, WPARAM wParam, LPARAM lParam) {
 }
 
 HWND g_hDlg;
-
 LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	g_hDlg = hDlg;
 	static int r, g, b;
+	static int width;
 	int tempPos;
 	switch (iMessage) {
 	case WM_INITDIALOG:
@@ -67,8 +67,14 @@ LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {
+		case IDOK:
+			width = GetDlgItemInt(hDlg, IDC_EDIT_WIDTH, FALSE, TRUE);
+			EndDialog(hDlg, IDOK);
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
+			return TRUE;
+		case ID_BTN_RESET:
+			InvalidRect(g_hWnd, NULL, TRUE);
 			return TRUE;
 		}
 		return TRUE;
