@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <chrono>
 #include "resource.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -13,9 +14,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return 0;
 }
 
+enum STATUS {RUN,PAUSE,WAIT};
+
 BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	static int sp, ep, timer, status;
+	static TCHAR msg[128];
 	switch (iMessage) {
 	case WM_INITDIALOG: // 다이얼로그 초기화 부분
+		SetDlgItemInt(hDlg, IDC_TIMER, 60, FALSE);
+		SetDlgItemInt(hDlg, IDC_STPG, 0, FALSE);
+		SetDlgItemInt(hDlg, IDC_EDPG, 0, FALSE);
+		status = WAIT;
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {  // 컨트롤에 대한 처리
@@ -23,10 +32,50 @@ BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam
 			MessageBox(hDlg, TEXT("Hellow"), TEXT("안녕"), MB_OK);
 			return TRUE; // 메세지를 제대로 처리했다면 참 아니면 거짓을 반환.
 		case IDCANCEL:
-			EndDialog(hDlg, IDOK);
+			KillTimer(hDlg, 1);
+0			EndDialog(hDlg, IDCANCEL);
+			return TRUE;
+		case IDC_START:
+			// 예외 처리
+			sp = GetDlgItemInt(hDlg, IDC_STPG, NULL, TRUE);
+			ep = GetDlgItemInt(hDlg, IDC_EDPG, NULL, TRUE);
+			timer = GetDlgItemInt(hDlg, IDC_TIMER, NULL, TRUE);
+			if (sp > ep || !timer) {
+				MessageBox(hDlg, TEXT("적절한 값을 입력하시오"), TEXT("오류"), MB_OK);
+				return TRUE;
+			}
+			status = RUN;
+			SetTimer(hDlg, 1, 1000, NULL);
+			SendMessage(hDlg, WM_TIMER, 1, NULL);
+			
+			return TRUE;
+		case IDC_PAUSE:
+			if (status == RUN) {
+				status = PAUSE;
+				KillTimer(hDlg, 1);
+			}
+			else if (status == PAUSE) {
+				status = RUN;
+				SetTimer(hDlg, 1, 1000, NULL);
+			}
 			return TRUE;
 		}
-		break;
+		return TRUE;
+	case WM_TIMER:
+		timer -=1;
+		SetDlgItemInt(hDlg, IDC_TIMER, timer, TRUE);
+		if (!timer) {
+			timer = 60;
+			sp += 1;
+			if (sp > ep) {
+				status = WAIT;
+				KillTimer(hDlg, 1);
+				return TRUE;
+			}
+		}
+		wsprintf(msg,TEXT("now on %d page %d second left"), sp, timer);
+		SetDlgItemText(hDlg, IDC_MSG, msg);
+		return TRUE;
 	}
 	return FALSE;
 }
