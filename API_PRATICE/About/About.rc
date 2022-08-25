@@ -111,7 +111,7 @@ BEGIN
     PUSHBUTTON      "Start",IDC_START,130,34,50,14
     PUSHBUTTON      "Pause",IDC_PAUSE,130,57,50,14
     CONTROL         "Occuring Beep Sound",IDC_CBEEP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,58,16,84,10
-    LTEXT           "",IDC_MSG,59,103,8,8
+    LTEXT           "",IDC_MSG,27,103,111,8
 END
 
 
