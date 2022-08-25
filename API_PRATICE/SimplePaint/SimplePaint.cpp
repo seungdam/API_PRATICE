@@ -50,10 +50,11 @@ void DrawLine(HDC hdc, int& x, int& y, WPARAM wParam, LPARAM lParam) {
 }
 
 HWND g_hDlg;
+int r, g, b;
+int width;
 LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	g_hDlg = hDlg;
-	static int r, g, b;
-	static int width;
+	
 	int tempPos;
 	switch (iMessage) {
 	case WM_INITDIALOG:
@@ -73,8 +74,8 @@ LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
 			return TRUE;
-		case ID_BTN_RESET:
-			InvalidRect(g_hWnd, NULL, TRUE);
+		case IDC_BTN_RESET:
+			InvalidateRect(g_hWnd, NULL, TRUE);
 			return TRUE;
 		}
 		return TRUE;
@@ -113,6 +114,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	static BOOL bNowDraw;
 	static int oldX, oldY;
+	HPEN op, mp;
 	switch (iMessage) {
 	case WM_CREATE:
 		break;
@@ -124,7 +126,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		if (bNowDraw) {
 			hdc = GetDC(hWnd);
+			mp = CreatePen(PS_DOT, width, RGB(r, g, b));
+			op = (HPEN)SelectObject(hdc, mp);
 			DrawLine(hdc, oldX, oldY, wParam, lParam);
+			SelectObject(hdc, op);
+			DeleteObject(mp);
 			ReleaseDC(hWnd, hdc);
 		}
 		break;
