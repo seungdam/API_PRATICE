@@ -8,7 +8,6 @@
 #define IDC_SCROLL_BLUE                 1003
 #define IDC_EDIT_WIDTH                  1004
 #define IDC_BTN_RESET                   1005
-#define r                               1005
 
 // Next default values for new objects
 // 
