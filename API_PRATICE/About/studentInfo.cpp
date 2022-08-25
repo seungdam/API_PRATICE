@@ -87,18 +87,32 @@ BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam
 	return FALSE;
 }
 
+void displayText(HWND hWnd,STDINFO stu) {
+	SendMessage(hWnd, EM_REPLACESEL, FALSE, (LPARAM)stu.id);
+	SendMessage(hWnd, EM_REPLACESEL, FALSE, (LPARAM)stu.pw);
+	SendMessage(hWnd, EM_REPLACESEL, FALSE, (LPARAM)stu.major);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	static HWND hEdit;
 	switch (iMessage) {
 	case WM_CREATE:
+		hEdit = CreateWindow(TEXT("edit"), NULL, WS_VISIBLE | WS_CHILD | WS_VSCROLL|
+			ES_AUTOHSCROLL | ES_MULTILINE, 0, 0, 100, 100, hWnd, (HMENU)38, g_hInst, NULL);
 		break;
 	case WM_RBUTTONDOWN:
-		DialogBox(g_hInst, MAKEINTRESOURCE(IDD_DIALOG3), hWnd, (DLGPROC)MainDlgProc);
+		if (DialogBox(g_hInst, MAKEINTRESOURCE(IDD_DIALOG3), hWnd, (DLGPROC)MainDlgProc)) { 
+			displayText(hEdit, student);
+		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
+		break;
+	case WM_SETFOCUS:
+		SetFocus(hEdit);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
