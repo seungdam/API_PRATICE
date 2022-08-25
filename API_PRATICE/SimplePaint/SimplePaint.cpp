@@ -40,11 +40,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
+void DrawLine(HDC hdc, int& x, int& y, WPARAM wParam, LPARAM lParam) {
+	MoveToEx(hdc, x, y, NULL);
+	x = LOWORD(lParam);
+	y = HIWORD(lParam);
+	LineTo(hdc, x, y);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 	static BOOL bNowDraw;
-	static int oldX, oldY, curX,curY;
+	static int oldX, oldY;
 	switch (iMessage) {
 	case WM_CREATE:
 		break;
@@ -52,6 +59,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		bNowDraw = TRUE;
 		oldX = LOWORD(lParam);
 		oldY = HIWORD(lParam);
+		break;
+	case WM_MOUSEMOVE:
+		if (bNowDraw) {
+			hdc = GetDC(hWnd);
+			DrawLine(hdc, oldX, oldY, wParam, lParam);
+			ReleaseDC(hWnd, hdc);
+		}
+		break;
+	case WM_LBUTTONUP:
+		bNowDraw = FALSE;
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
