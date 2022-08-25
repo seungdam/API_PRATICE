@@ -1,9 +1,11 @@
 #include <windows.h>
-
+#include "resource.h"
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
+HWND g_hWnd;
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("SimplePaint");
+
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;   // 윈도우 핸들
@@ -30,7 +32,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		, NULL, NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow); // 윈도우창을 출력
 	if (hWnd == NULL) return -1;
-
+	g_hWnd = hWnd;
 	// 메세지 루프
 	while (GetMessage(&Message, NULL, 0, 0) > 0) { // 메세지 큐에 있는 메세지들을 확인
 		TranslateMessage(&Message); // 키보드에 입력된 메세지를 인스턴스가 이해하기 쉬운 형태로 해석
@@ -45,6 +47,28 @@ void DrawLine(HDC hdc, int& x, int& y, WPARAM wParam, LPARAM lParam) {
 	x = LOWORD(lParam);
 	y = HIWORD(lParam);
 	LineTo(hdc, x, y);
+}
+
+HWND g_hDlg;
+
+LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	g_hDlg = hDlg;
+	switch (iMessage) {
+	case WM_INITDIALOG:
+		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLLBAR1), SB_CTL, 0, 255, TRUE);
+		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLLBAR2), SB_CTL, 0, 255, TRUE);
+		SetScrollRange(GetDlgItem(hDlg, IDC_SCROLLBAR3), SB_CTL, 0, 255, TRUE);
+		SetDlgItemInt(hDlg, IDC_EDIT1, 0, TRUE);
+		return TRUE;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			return TRUE;
+		}
+		return TRUE;
+	}
+	return FALSE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
@@ -69,6 +93,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_LBUTTONUP:
 		bNowDraw = FALSE;
+		break;
+	case WM_RBUTTONDOWN:
+		DialogBox(g_hInst,MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SimplePainDlgProc);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
