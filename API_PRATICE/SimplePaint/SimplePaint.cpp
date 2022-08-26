@@ -3,6 +3,7 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HWND g_hWnd;
+HWND g_hDlg;
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("SimplePaint");
 
@@ -34,7 +35,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	if (hWnd == NULL) return -1;
 	g_hWnd = hWnd;
 	// 메세지 루프
-	while (GetMessage(&Message, NULL, 0, 0) > 0) { // 메세지 큐에 있는 메세지들을 확인
+	while (GetMessage(&Message, NULL, 0, 0) > 0 || !IsDialogMessage(g_hDlg,&Message)) { // 메세지 큐에 있는 메세지들을 확인
 		TranslateMessage(&Message); // 키보드에 입력된 메세지를 인스턴스가 이해하기 쉬운 형태로 해석
 		DispatchMessage(&Message); // WndProc으로 해석시킨 메세지를 전달한다.
 	}
@@ -49,7 +50,7 @@ void DrawLine(HDC hdc, int& x, int& y, WPARAM wParam, LPARAM lParam) {
 	LineTo(hdc, x, y);
 }
 
-HWND g_hDlg;
+
 int r, g, b;
 int width;
 LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
@@ -73,6 +74,7 @@ LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 			EndDialog(hDlg, IDOK);
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
+			g_hDlg = NULL;
 			return TRUE;
 		case IDC_BTN_RESET:
 			InvalidateRect(g_hWnd, NULL, TRUE);
@@ -138,7 +140,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		bNowDraw = FALSE;
 		break;
 	case WM_RBUTTONDOWN:
-		DialogBox(g_hInst,MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SimplePainDlgProc);
+		if (!IsWindow(g_hDlg)) {
+			g_hDlg = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SimplePainDlgProc);
+			ShowWindow(g_hDlg, SW_SHOW);
+		}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
