@@ -70,14 +70,18 @@ LRESULT CALLBACK SimplePainDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {
 		case IDOK:
-			width = GetDlgItemInt(hDlg, IDC_EDIT_WIDTH, FALSE, TRUE);
-			EndDialog(hDlg, IDOK);
+			DestroyWindow(hDlg);
+			g_hDlg = NULL;
+			return TRUE;
 		case IDCANCEL:
-			EndDialog(hDlg, IDCANCEL);
+			DestroyWindow(hDlg);
 			g_hDlg = NULL;
 			return TRUE;
 		case IDC_BTN_RESET:
 			InvalidateRect(g_hWnd, NULL, TRUE);
+			return TRUE;
+		case IDC_EDIT_WIDTH:
+			width = GetDlgItemInt(hDlg, IDC_EDIT_WIDTH, FALSE, TRUE);
 			return TRUE;
 		}
 		return TRUE;
@@ -150,6 +154,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
+		DestroyWindow(g_hDlg);
 		PostQuitMessage(0);
 		break;
 	}
